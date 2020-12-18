@@ -15,37 +15,47 @@
     <!-- vuejs -->
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
     <!-- script -->
-    <script src="js/script.js"></script>
+    
     <title>Document</title>
 </head>
 <body>
 
-    <header>
-        <div class="logo">
-            <a href="#">BOOLFLIX</a>
-        </div>
-
-        <div class="search-bar">
-            <input type="text">
-            <button><i class="fas fa-search"></i></button>
-        </div>
-    </header>
-
-
-    <main>
-
-        <!-- card -->
-        <div class="card">
-            <div class="card-overlay">
-                <p class="title"><span>Titolo:</span> ritorno al futuro</p>
-                <p class="original-title"><span>Titolo originale:</span> Back to the future</p>
-                <p class="vote"><span>Voto:</span></p>
-                <p class="overview"><span>Overview:</span> Lorem ipsum dolor sit amet consectetur adipisicing elit. Veritatis deleniti voluptas commodi minus. Consequatur repellat, rem cumque mollitia nostrum architecto. Voluptatum hic corporis autem laborum soluta suscipit eaque esse sit?</p>
+    <div id="root">
+        <!-- header -->
+        <header>
+            <div class="logo">
+                <a href="#">BOOLFLIX</a>
             </div>
-        </div>
-
-
-    </main>
     
+            <div class="search-bar">
+                <input @keyup.enter="searchMovie" type="text" v-model="search" id="search-input">
+                <button @click="searchMovie" id="search-btn"><i class="fas fa-search"></i></button>
+            </div>
+        </header>
+    
+        <!-- main -->
+        <main>
+            <!-- card -->
+            <div class="card"  v-for="movie in movies">
+                <img v-if="movie.poster_path != null" :src="imgPath + movie.poster_path" alt="movie.title">
+                <div v-else><i class="fas fa-video-slash missing"></i></div>
+                <div class="card-overlay">
+                    <p class="title"><span>Titolo:</span> {{movie.title}}</p>
+                    <p class="original-title"><span>Titolo originale:</span> {{movie.original_title}}</p>
+                    <p class="vote">
+                        <span>Voto:</span>
+                        <i class="fas fa-star"></i>
+                        <i class="far fa-star"></i>
+                        <i class="far fa-star"></i>
+                        <i class="far fa-star"></i>
+                        <i class="far fa-star"></i>
+                    </p>
+                    <p class="overview"><span>Overview:</span> {{movie.overview}}</p>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="js/script.js"></script>
 </body>
 </html>
