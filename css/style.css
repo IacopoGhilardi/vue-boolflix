@@ -6,6 +6,7 @@
 
 body {
     font-size: 16px;
+    background-color: gray;
 }
 
 header {
@@ -21,4 +22,44 @@ header {
     text-decoration: none;
     color: red;
     font-size: 2rem;
+}
+
+
+main {
+    display: flex;
+    flex-wrap: wrap;
+    
+    padding: 30px 20px;
+}
+
+
+.card {
+    width: 200px;
+    height: 300px;
+    margin: 10px;
+    background-image: url("https://image.tmdb.org/t/p/w220_and_h330_face/oMtdLQdNdg0ZHVSCvVns7UGVNqh.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    transition: .3s;
+}
+.card:hover {
+    transform: scale(1.1);
+    overflow: hidden;    
+}
+
+.card-overlay {
+    padding: 50px 5px;
+    background-color: hsla(0, 0%, 0%, 0.8);
+    opacity: 0;
+}
+
+.card p {
+    color: white;
+}
+
+
+.card:hover .card-overlay {
+    opacity: 1;
+    cursor: pointer;
 }
