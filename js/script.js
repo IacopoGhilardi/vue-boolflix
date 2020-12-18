@@ -1,7 +1,3 @@
-// 63d036c152cd4651d8a116600d977c32
-// https://image.tmdb.org/t/p/w220_and_h330_face/
-
-
 const app = new Vue({
 
     el: "#root",
@@ -11,8 +7,9 @@ const app = new Vue({
         movies: []
     },
     methods: {
+        //funzione search
         searchMovie(){
-            console.log(this.search);
+            //chiamata API
             axios.get('https://api.themoviedb.org/3/search/movie',
             {
                 params: {
@@ -22,8 +19,8 @@ const app = new Vue({
                 }
             })
             .then((response) => {
+                //salvo i risultati nell'array movies
                 this.movies = response.data.results;
-                console.log('movies', this.movies);
             })
         }
     }
