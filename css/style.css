@@ -7,6 +7,7 @@
 body {
     font-size: 16px;
     background-color: gray;
+    font-family: 'Roboto', sans-serif;
 }
 
 header {
@@ -37,6 +38,7 @@ main {
     width: 200px;
     height: 300px;
     margin: 10px;
+    border: 1px solid white;
     background-image: url("https://image.tmdb.org/t/p/w220_and_h330_face/oMtdLQdNdg0ZHVSCvVns7UGVNqh.jpg");
     background-position: center;
     background-repeat: no-repeat;
@@ -49,13 +51,20 @@ main {
 }
 
 .card-overlay {
-    padding: 50px 5px;
-    background-color: hsla(0, 0%, 0%, 0.8);
+
+    padding: 40px 8px;
+    background-color: rgba(0, 0, 0, 0.8);
     opacity: 0;
 }
 
 .card p {
     color: white;
+    font-size: .8rem;
+}
+.card p span {
+    margin-right: 3px;
+    font-weight: bold;
+    font-size: .9rem;
 }
 
 
@@ -63,3 +72,4 @@ main {
     opacity: 1;
     cursor: pointer;
 }
+
