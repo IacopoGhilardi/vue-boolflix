@@ -35,17 +35,23 @@
     
         <!-- main -->
         <main>
-            <!-- card -->
-            <div class="card"  v-for="movie in movies">
+            <!-- card movies -->
+            <div class="card" v-for="movie in shows" v-for="show in tvShows">
                 <img v-if="movie.poster_path != null" :src="imgPath + movie.poster_path" alt="movie.title">
                 <div v-else><i class="fas fa-video-slash missing"></i></div>
                 <div class="card-overlay">
-                    <p class="title"><span>Titolo:</span> {{movie.title}}</p>
-                    <p class="original-title"><span>Titolo originale:</span> {{movie.original_title}}</p>
+                    <p class="title"><span>Titolo:</span> {{movie.title}} {{movie.name}}</p>
+                    <p class="original-title"><span>Titolo originale:</span> {{movie.original_title}} {{movie.original_name}}</p>
+                    <p  v-if="flagImg(movie)" class="language"><span>Lingua: </span> 
+                    <img :src="flagImg(movie)" alt="flag">
+                    </p>
+                    <p v-else class="language"><span>Lingua: </span> 
+                        {{movie.original_language}}
+                    </p>
                     <p class="vote">
                         <span>Voto:</span>
-                        <i v-for="star in (Math.ceil(movie.vote_average / 2))" class="fas fa-star"></i>
-                        <i v-for="star in ( 5 - Math.ceil(movie.vote_average / 2))" class="far fa-star"></i>
+                        <i v-for="star in movieRate(movie)" class="fas fa-star"></i><!--
+                        --><i v-for="emptyStar in ( 5 - movieRate(movie))" class="far fa-star"></i>
                     </p>
                     <p class="overview"><span>Overview:</span> {{movie.overview}}</p>
                 </div>

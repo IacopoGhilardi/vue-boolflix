@@ -124,6 +124,20 @@ main {
     font-weight: bold;
     font-size: .9rem;
 }
+
+.language {
+    display: flex;
+    align-items: center;
+}
+
+.language img {
+    width: 30px;
+    height: 20px;
+}
+
+.vote i {
+    color: yellow;
+}
 /* main */
 
 
