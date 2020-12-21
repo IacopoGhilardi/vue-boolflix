@@ -24,7 +24,7 @@
         <!-- header -->
         <header>
             <div class="logo">
-                <a href="#">BOOLFLIX</a>
+                <a href="#" @click="reset">BOOLFLIX</a>
             </div>
     
             <div class="search-bar">
@@ -44,11 +44,8 @@
                     <p class="original-title"><span>Titolo originale:</span> {{movie.original_title}}</p>
                     <p class="vote">
                         <span>Voto:</span>
-                        <i class="fas fa-star"></i>
-                        <i class="far fa-star"></i>
-                        <i class="far fa-star"></i>
-                        <i class="far fa-star"></i>
-                        <i class="far fa-star"></i>
+                        <i v-for="star in (Math.ceil(movie.vote_average / 2))" class="fas fa-star"></i>
+                        <i v-for="star in ( 5 - Math.ceil(movie.vote_average / 2))" class="far fa-star"></i>
                     </p>
                     <p class="overview"><span>Overview:</span> {{movie.overview}}</p>
                 </div>

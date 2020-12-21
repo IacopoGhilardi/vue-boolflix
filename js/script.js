@@ -21,7 +21,11 @@ const app = new Vue({
             .then((response) => {
                 //salvo i risultati nell'array movies
                 this.movies = response.data.results;
-            })
+            });
+            this.search = '';
+        },
+        reset() {
+            this.movies = [];
         }
     }
 });
