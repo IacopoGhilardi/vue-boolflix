@@ -26,6 +26,10 @@ header {
     font-size: 2rem;
 }
 
+#genreSelection {
+    padding: 5px 10px;
+}
+
 #search-btn {
     background-color: black;
     padding: 5px 10px;
@@ -74,10 +78,6 @@ main {
     object-fit: cover;
     object-position: center;
     z-index: 0;
-}
-.missing {
-    font-size: 3rem;
-    color: white;
 }
 
 /* card scrollbar */
