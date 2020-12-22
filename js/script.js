@@ -4,7 +4,8 @@ const app = new Vue({
     data: {
         imgPath: 'https://image.tmdb.org/t/p/w220_and_h330_face/',
         search:'',
-        shows: []
+        shows: [],
+        genreList: []
     },
     methods: {
         flagImg(movie) {
@@ -14,6 +15,19 @@ const app = new Vue({
         },
         movieRate(movie) {
             return Math.ceil(movie.vote_average / 2);
+        },
+        getGenre(arrOfGenre) {         
+            const elementArr = [];   
+            this.genreList.forEach(element => {
+                if (arrOfGenre.includes(element.id)) {
+                    elementArr.push(element.name);
+                }
+            });
+            console.log(elementArr);
+            if (elementArr.length > 5) {
+                elementArr.length = 5;
+            }
+            return elementArr;
         },
         //funzione search
         searchMovie(){
@@ -35,14 +49,35 @@ const app = new Vue({
                         query: this.search,
                         language: 'it-IT'
                     }
+                }),
+                axios.get('https://api.themoviedb.org/3/genre/movie/list',
+                {
+                    params: {
+                        api_key: '63d036c152cd4651d8a116600d977c32',
+                        query: this.search,
+                        language: 'it-IT'
+                    }
+                }),
+                axios.get('https://api.themoviedb.org/3/genre/tv/list',
+                {
+                    params: {
+                        api_key: '63d036c152cd4651d8a116600d977c32',
+                        query: this.search,
+                        language: 'it-IT'
+                    }
                 })
             ])
-            .then(axios.spread((movies, tvshows) => {
+            .then(axios.spread((movies, tvshows, genreMovies, genreShows) => {
                 //salvo i risultati nell'array movies
                 const moviesArr = movies.data.results;
                 const tvShows = tvshows.data.results;
+                const showsGenreList = genreShows.data.genres;
+                const movieGenreList = genreMovies.data.genres;
 
-                this.shows = moviesArr.concat(tvShows);        
+                this.genreList = movieGenreList.concat(showsGenreList);
+                console.log(this.genreList);
+                this.shows = moviesArr.concat(tvShows);   
+                console.log(this.shows);    
             }));
             this.search = '';
         },

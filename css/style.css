@@ -119,7 +119,7 @@ main {
     color: white;
     font-size: .8rem;
 }
-.card p span {
+.card p span:first-child {
     margin-right: 3px;
     font-weight: bold;
     font-size: .9rem;

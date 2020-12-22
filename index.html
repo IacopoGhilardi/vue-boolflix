@@ -28,6 +28,10 @@
             </div>
     
             <div class="search-bar">
+                <select name="" id="">
+                    <option value="">Filtra per genere</option>
+                    <option v-for="genre in genreList" value="genre.name">{{genre.name}}</option>
+                </select>
                 <input @keyup.enter="searchMovie" type="text" v-model="search" id="search-input">
                 <button @click="searchMovie" id="search-btn"><i class="fas fa-search"></i></button>
             </div>
@@ -36,7 +40,7 @@
         <!-- main -->
         <main>
             <!-- card movies -->
-            <div class="card" v-for="movie in shows" v-for="show in tvShows">
+            <div class="card" v-for="movie in shows">
                 <img v-if="movie.poster_path != null" :src="imgPath + movie.poster_path" alt="movie.title">
                 <div v-else><i class="fas fa-video-slash missing"></i></div>
                 <div class="card-overlay">
@@ -54,6 +58,7 @@
                         --><i v-for="emptyStar in ( 5 - movieRate(movie))" class="far fa-star"></i>
                     </p>
                     <p class="overview"><span>Overview:</span> {{movie.overview}}</p>
+                    <p class="genres"><span>Generi: </span> <span v-for="genre in getGenre(movie.genre_ids)">{{genre}}, </span></p>
                 </div>
             </div>
         </main>
