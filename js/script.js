@@ -6,6 +6,8 @@ const app = new Vue({
         search:'',
         genreList: [],
         showsList: [],
+        popularMovies: [],
+        popularTvShows: [],
         filteredShowList: [],
         mykey: '63d036c152cd4651d8a116600d977c32',
         select: ''
@@ -155,13 +157,15 @@ const app = new Vue({
                             // console.log(response.data.cast);
                         });
                     }
-                    this.filteredShowList = this.showsList;
+                    this.filteredShowList = this.showsList.sort(function(a, b){
+                        return a.popularity - b.popularity;
+                    });
                     this.search = '';
                     }));
             }
         },
         reset() {
             this.showsList = [];
-        }
+        },
     }
 });

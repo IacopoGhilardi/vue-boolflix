@@ -26,15 +26,24 @@
             <div class="logo">
                 <a href="#" @click="reset">BOOLFLIX</a>
             </div>
-            <!-- search -->
-            <div class="search-bar">
-                <select name="" id="genreSelection" v-if="showsList.length > 0" v-model="select" @change="filterByGenre">
-                    <option value="">Filtra per genere</option>
-                    <option v-for="genre in genreList" :value="genre">{{genre.name}}</option>
-                </select>
-                <input @keyup.enter="searchMovie" type="text" v-model="search" id="search-input" placeholder="Cerca il film o la serie">
-                <button @click="searchMovie" id="search-btn"><i class="fas fa-search"></i></button>
-            </div>
+            
+            <nav class="nav-bar">
+                <ul>
+                    <li @click="reset" class="active">Home</li>
+                    <li>Film</li>
+                    <li>Serie Tv</li>
+                </ul>
+                <!-- search -->
+                <div class="search-bar">
+                    <select name="" id="genreSelection" v-if="showsList.length > 0" v-model="select" @change="filterByGenre">
+                        <option value="">Filtra per genere</option>
+                        <option v-for="genre in genreList" :value="genre">{{genre.name}}</option>
+                    </select>
+                    <input @keyup.enter="searchMovie" type="text" v-model="search" id="search-input" placeholder="Cerca il film o la serie">
+                    <button @click="searchMovie" id="search-btn"><i class="fas fa-search"></i></button>
+                </div>
+            </nav>
+            
         </header>
     
         <!-- main -->
