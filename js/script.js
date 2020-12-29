@@ -5,8 +5,10 @@ const app = new Vue({
         imgPath: 'https://image.tmdb.org/t/p/w220_and_h330_face/',
         search:'',
         genreList: [],
-        tvShows: [],
-        movies: []
+        showsList: [],
+        filteredShowList: [],
+        mykey: '63d036c152cd4651d8a116600d977c32',
+        select: ''
     },
     mounted(){
         //richiamo le api per avere le opzioni della selection dei generi
@@ -54,92 +56,112 @@ const app = new Vue({
         movieRate(movie) {
             return Math.ceil(movie.vote_average / 2);
         },
+        checkLastIndex(element, arr){
+            if (arr.indexOf(element) == arr.length - 1) {
+                return false;
+            } else return true;
+        },
         //gestione dei generi
         getGenre(arrOfGenre) {         
-            const elementArr = [];   
+            const genreList = [];   
             this.genreList.forEach(element => {
-                if (elementArr.length == 5) {
-                    return elementArr;
-                } else if (arrOfGenre.includes(element.id)) {
-                    elementArr.push(element.name);
+                if (arrOfGenre.includes(element.id)) {
+                    genreList.push(element.name);
                 }
             });
-            return elementArr;
+            return genreList;
         },
-        //ricerca del cast
-        getMovieCast: async function(el){
-            const cast = [];
-            //chiamata api per avere credits
-            await axios.get(`https://api.themoviedb.org/3/movie/${el.id}/credits`, {
-                params: {
-                    api_key: '63d036c152cd4651d8a116600d977c32'
-                }
-            })
-            .then((response) => {
-                    let result = response.data.cast;
-                    for(let i = 0; i < result.length; i++) {
-                        if (cast.length == 5) {
-                            return cast;
-                        } else cast.push(element.name);
-                    }
-            })
-            console.log(cast);
-            return cast;
+        filterByGenre(){
+            if (this.select == ''){
+                this.filteredShowList = this.showsList;
+            } else {
+                this.filteredShowList = this.showsList.filter((element) => {
+                    return element.genre_ids.includes(this.select.id);
+                });
+            }
         },
-        getShowsCast: async function(el){
+        //calcolo l'array dei nomi del cast
+        getCastName(actorsArr){
             const cast = [];
-            //chiamata api per avere credits
-            await axios.get(`https://api.themoviedb.org/3/tv/${el.id}/credits`, {
-                params: {
-                    api_key: '63d036c152cd4651d8a116600d977c32'
-                }
-            })
-            .then((response) => {
-                    let result = response.data.cast;
-                    result.forEach(element => {
-                        if (cast.length == 5) {
-                            return cast;
-                        } else {
-                         cast.push(element.name);
-                         }
-                            
-                    });
-                    
-            })
-            console.log(cast);
+
+            actorsArr.forEach(element => {
+                if (cast.length <= 5) {
+                    cast.push(element.name);
+                } else return cast;
+            });
+
             return cast;
         },
         //funzione search
         searchMovie(){
-            axios.all([
-                //chiamata API movie
-                axios.get('https://api.themoviedb.org/3/search/movie',
-                {
-                    params: {
-                        api_key: '63d036c152cd4651d8a116600d977c32',
-                        query: this.search,
-                        language: 'it-IT'
+            if (this.search != '') {
+                this.reset();
+                axios.all([
+                    //chiamata API movie
+                    axios.get('https://api.themoviedb.org/3/search/movie',
+                    {
+                        params: {
+                            api_key: this.mykey,
+                            query: this.search,
+                            language: 'it-IT'
+                        }
+                    }),
+                    //chiamata API serie
+                    axios.get('https://api.themoviedb.org/3/search/tv',
+                    {
+                        params: {
+                            api_key: this.mykey,
+                            query: this.search,
+                            language: 'it-IT'
+                        }
+                    })
+                ])
+                .then(axios.spread((call1, call2) => {
+                    //salvo i risultati nell'array movies
+                    const movies = call1.data.results;
+                    const tvShows = call2.data.results;
+    
+                    for(let i = 0; i < movies.length; i++) {
+                        axios.get(`https://api.themoviedb.org/3/movie/${movies[i].id}/credits`, {
+                            params: {
+                                api_key: this.mykey
+                            }
+                        })
+                        .then(response => {
+                            let cast = response.data.cast;
+                            cast.length = 5;
+    
+                            this.showsList.push({
+                                ...movies[i],
+                                cast: this.getCastName(cast)
+                            })
+                            // console.log(response.data.cast);
+                        });
                     }
-                }),
-                //chiamata API serie
-                axios.get('https://api.themoviedb.org/3/search/tv',
-                {
-                    params: {
-                        api_key: '63d036c152cd4651d8a116600d977c32',
-                        query: this.search,
-                        language: 'it-IT'
+                    for(let i = 0; i < tvShows.length; i++) {
+                        axios.get(`https://api.themoviedb.org/3/tv/${tvShows[i].id}/credits`, {
+                            params: {
+                                api_key: this.mykey
+                            }
+                        })
+                        .then(response => {
+                            let cast = response.data.cast;
+                            cast.length = 5;
+    
+                            this.showsList.push({
+                                ...tvShows[i],
+                                cast: this.getCastName(cast)
+                            })
+                            // console.log(response.data.cast);
+                        });
                     }
-                })
-            ])
-            .then(axios.spread((call1, tvshows) => {
-                //salvo i risultati nell'array movies
-                this.movies = call1.data.results;
-                this.tvShows = tvshows.data.results; 
-            }));
-            this.search = '';
+                    this.filteredShowList = this.showsList;
+                    this.search = '';
+                    }));
+            }
         },
         reset() {
-            this.shows = [];
+            this.showsList = [];
         }
     }
 });

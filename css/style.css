@@ -105,7 +105,7 @@ main {
     padding: 40px 8px;
     background-color: rgba(0, 0, 0, 0.8);
     opacity: 0;
-    overflow-x: auto;
+    overflow-y: auto;
 }
 .card:hover .card-overlay {
     opacity: 1;
@@ -137,6 +137,10 @@ main {
 
 .vote i {
     color: yellow;
+}
+
+.cast {
+    line-height: 15px;
 }
 /* main */
 
