@@ -30,8 +30,9 @@
             <nav class="nav-bar">
                 <ul>
                     <li @click="reset" class="active">Home</li>
-                    <li>Film</li>
-                    <li>Serie Tv</li>
+                    <li @click="getPopularMovies">Film</li>
+                    <li @click="getPopularTvshow">Serie Tv</li>
+                    <li @click="getPopularFromAllShows">Most Popular</li>
                 </ul>
                 <!-- search -->
                 <div class="search-bar">
@@ -51,8 +52,8 @@
             <!-- card movies -->
             <div class="card" v-for="movie in filteredShowList">
                 <!-- poster -->
-                <img v-if="movie.poster_path != null" :src="imgPath + movie.poster_path" alt="movie.title" class="poster">
-                <img v-else src="img/image-not-found.png" alt="immagine non trovata" class="poster">
+                <img v-if="movie.poster_path != null" :src="imgPath + movie.poster_path" alt="movie.title">
+                <img v-else src="img/image-not-found.png" alt="immagine non trovata">
                 <!-- overlay -->
                 <div class="card-overlay">
                     <p class="title"><span>Titolo:</span> {{movie.title}} {{movie.name}}</p>
@@ -63,18 +64,22 @@
                     <p v-else class="language"><span>Lingua: </span> 
                         {{movie.original_language}}
                     </p>
+                    <!-- voto -->
                     <p class="vote">
                         <span>Voto:</span>
                         <i v-for="star in movieRate(movie)" class="fas fa-star"></i><!--
                         --><i v-for="emptyStar in ( 5 - movieRate(movie))" class="far fa-star"></i>
                     </p>
+                    <!-- overview -->
                     <p class="overview"><span>Overview:</span> {{movie.overview}}</p>
+                    <!-- generi -->
                     <p class="genres">
-                        <span>Generi: </span>
+                        <span>Generi:</span>
                         <span v-for="genre in getGenre(movie.genre_ids)">{{genre}}<span v-if="checkLastIndex(genre, getGenre(movie.genre_ids))">, </span></span>
                     </p>
+                    <!-- cast -->
                     <p class="cast">
-                        <span>Cast: </span>
+                        <span>Cast:</span>
                         <span v-for="actor in movie.cast">{{actor}}<span v-if="checkLastIndex(actor, movie.cast)">,</span></span>
                     </p>
                 </div>

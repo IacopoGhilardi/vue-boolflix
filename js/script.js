@@ -6,8 +6,8 @@ const app = new Vue({
         search:'',
         genreList: [],
         showsList: [],
-        popularMovies: [],
-        popularTvShows: [],
+        movies: [],
+        tvShows: [],
         filteredShowList: [],
         mykey: '63d036c152cd4651d8a116600d977c32',
         select: ''
@@ -58,6 +58,7 @@ const app = new Vue({
         movieRate(movie) {
             return Math.ceil(movie.vote_average / 2);
         },
+        // vedo se l'elemento è l'ultimo dell'array
         checkLastIndex(element, arr){
             if (arr.indexOf(element) == arr.length - 1) {
                 return false;
@@ -73,6 +74,7 @@ const app = new Vue({
             });
             return genreList;
         },
+        // filtro per genere
         filterByGenre(){
             if (this.select == ''){
                 this.filteredShowList = this.showsList;
@@ -91,8 +93,27 @@ const app = new Vue({
                     cast.push(element.name);
                 } else return cast;
             });
-
             return cast;
+        },
+        //stampo il cast di un array
+        printCast(show, array){
+            for(let i = 0; i < array.length; i++) {
+                axios.get(`https://api.themoviedb.org/3/${show}/${array[i].id}/credits`, {
+                    params: {
+                        api_key: this.mykey
+                    }
+                })
+                .then(response => {
+                    let cast = response.data.cast;
+                    cast.length = 5;
+
+                    this.showsList.push({
+                        ...array[i],
+                        cast: this.getCastName(cast)
+                    })
+                    this.$forceUpdate();
+                });
+            }
         },
         //funzione search
         searchMovie(){
@@ -120,52 +141,101 @@ const app = new Vue({
                 ])
                 .then(axios.spread((call1, call2) => {
                     //salvo i risultati nell'array movies
-                    const movies = call1.data.results;
-                    const tvShows = call2.data.results;
-    
-                    for(let i = 0; i < movies.length; i++) {
-                        axios.get(`https://api.themoviedb.org/3/movie/${movies[i].id}/credits`, {
-                            params: {
-                                api_key: this.mykey
-                            }
-                        })
-                        .then(response => {
-                            let cast = response.data.cast;
-                            cast.length = 5;
-    
-                            this.showsList.push({
-                                ...movies[i],
-                                cast: this.getCastName(cast)
-                            })
-                            // console.log(response.data.cast);
-                        });
-                    }
-                    for(let i = 0; i < tvShows.length; i++) {
-                        axios.get(`https://api.themoviedb.org/3/tv/${tvShows[i].id}/credits`, {
-                            params: {
-                                api_key: this.mykey
-                            }
-                        })
-                        .then(response => {
-                            let cast = response.data.cast;
-                            cast.length = 5;
-    
-                            this.showsList.push({
-                                ...tvShows[i],
-                                cast: this.getCastName(cast)
-                            })
-                            // console.log(response.data.cast);
-                        });
-                    }
+                    this.movies = call1.data.results;
+                    this.tvShows = call2.data.results;
+                    
+                    //cast di film e serie
+                    this.printCast('movie', this.movies);
+                    this.printCast('tv', this.tvShows);
+
                     this.filteredShowList = this.showsList.sort(function(a, b){
                         return a.popularity - b.popularity;
                     });
+
                     this.search = '';
                     }));
             }
         },
+        //stampo film popolari
+        getPopularMovies() {
+            if(this.movies.length == 0){
+                this.reset();
+                axios.get('https://api.themoviedb.org/3/movie/popular',
+                        {
+                            params: {
+                                api_key: this.mykey,
+                                language: 'it-IT'
+                            }
+                        })
+                        .then(response => {
+                            this.filteredShowList = response.data.results;
+                            this.printCast('movie', this.filteredShowList);
+                            this.filteredShowList = this.showsList;
+                        });
+            } else {
+                this.filteredShowList = this.movies;
+            }
+        },
+        //stampo serie tv popolari
+        getPopularTvshow() {         
+            if(this.tvShows.length == 0){
+                this.reset();
+                axios.get('https://api.themoviedb.org/3/tv/popular',
+                {
+                    params: {
+                        api_key: this.mykey,
+                        language: 'it-IT'
+                    }
+                })
+                .then(response => {
+                    this.filteredShowList = response.data.results;
+                    this.printCast('tv', this.filteredShowList);
+                    // this.$forceUpdate();
+                    this.filteredShowList = this.showsList;
+                });
+            } else {
+                this.filteredShowList = this.tvShows;
+            }
+        },
+        //stampo tutti gli show popolari
+        getPopularFromAllShows(){
+            this.reset();
+                axios.all([
+                    //chiamata API movie
+                    axios.get('https://api.themoviedb.org/3/movie/popular',
+                    {
+                        params: {
+                            api_key: this.mykey,
+                            language: 'it-IT'
+                        }
+                    }),
+                    //chiamata API serie
+                    axios.get('https://api.themoviedb.org/3/tv/popular',
+                    {
+                        params: {
+                            api_key: this.mykey,
+                            language: 'it-IT'
+                        }
+                    })
+                ])
+                .then(axios.spread((call1, call2) => {
+                    //salvo i risultati nell'array movies
+                    const popularMovies = call1.data.results;
+                    const popularTvShows = call2.data.results;
+
+                    //cast
+                    this.printCast('movie', popularMovies);
+                    this.printCast('tv', popularTvShows);
+
+                    this.filteredShowList = this.showsList;
+                }));
+        },
+        //funzione reset
         reset() {
             this.showsList = [];
-        },
+            this.filteredShowList = [];
+            this.movies = [];
+            this.tvShows = [];
+        }
     }
 });
