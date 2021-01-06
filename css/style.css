@@ -37,7 +37,7 @@ header {
     display: flex;
     align-items: center;
     padding-left: 20px;
-    color: white;
+    color: rgb(180, 180, 180);
 }
 
 .nav-bar ul li {
@@ -49,6 +49,8 @@ header {
 
 .nav-bar ul li:hover {
     cursor: pointer;
+    color: white;
+    transition: .3s;
 }
 
 .active::after {
@@ -68,6 +70,11 @@ header {
 
 #genreSelection {
     padding: 5px 10px;
+    background-color: black;
+    border: 1px solid rgb(180, 180, 180);
+    color: white;
+    outline: none;
+    margin-right: 20px;
 }
 
 #search-btn {
@@ -86,6 +93,9 @@ header {
 #search-input {
     padding: 5px 10px;
     outline: none;
+    background-color: black;
+    color: white;
+    border: 1px solid rgb(180, 180, 180);
 }
 /* /header */
 
@@ -145,6 +155,7 @@ main {
     padding: 40px 8px;
     background-color: rgba(0, 0, 0, 0.8);
     opacity: 0;
+    line-height: 17px;
     overflow-y: auto;
 }
 .card:hover .card-overlay {

@@ -50,7 +50,7 @@ const app = new Vue({
     methods: {
         //gestione della bandiera
         flagImg(movie) {
-            if (movie.original_language == "it" || movie.original_language == "en") {
+            if (movie.original_language == "it" || movie.original_language == "en" || movie.original_language == "es") {
                 return ("img/" + movie.original_language.toLowerCase() + ".png");
             } else return false;
         },
@@ -89,7 +89,7 @@ const app = new Vue({
             const cast = [];
 
             actorsArr.forEach(element => {
-                if (cast.length <= 5) {
+                if (cast.length < 5) {
                     cast.push(element.name);
                 } else return cast;
             });
@@ -97,6 +97,7 @@ const app = new Vue({
         },
         //stampo il cast di un array
         printCast(show, array){
+            const copyArr = []
             for(let i = 0; i < array.length; i++) {
                 axios.get(`https://api.themoviedb.org/3/${show}/${array[i].id}/credits`, {
                     params: {
@@ -105,15 +106,21 @@ const app = new Vue({
                 })
                 .then(response => {
                     let cast = response.data.cast;
-                    cast.length = 5;
 
                     this.showsList.push({
                         ...array[i],
                         cast: this.getCastName(cast)
-                    })
+                    });
+                    copyArr.push({
+                        ...array[i],
+                        cast: this.getCastName(cast)
+                    });
                     this.$forceUpdate();
                 });
             }
+            if (show == 'tv') {
+                this.tvShows = copyArr;
+            } else this.movies = copyArr;
         },
         //funzione search
         searchMovie(){
@@ -143,14 +150,12 @@ const app = new Vue({
                     //salvo i risultati nell'array movies
                     this.movies = call1.data.results;
                     this.tvShows = call2.data.results;
-                    
+
                     //cast di film e serie
-                    this.printCast('movie', this.movies);
+                    this.printCast('movie', this.movies);                    
                     this.printCast('tv', this.tvShows);
 
-                    this.filteredShowList = this.showsList.sort(function(a, b){
-                        return a.popularity - b.popularity;
-                    });
+                    this.filteredShowList = this.showsList;
 
                     this.search = '';
                     }));
@@ -158,6 +163,7 @@ const app = new Vue({
         },
         //stampo film popolari
         getPopularMovies() {
+            this.select = '';
             if(this.movies.length == 0){
                 this.reset();
                 axios.get('https://api.themoviedb.org/3/movie/popular',
@@ -177,7 +183,8 @@ const app = new Vue({
             }
         },
         //stampo serie tv popolari
-        getPopularTvshow() {         
+        getPopularTvshow() {     
+            this.select = '';    
             if(this.tvShows.length == 0){
                 this.reset();
                 axios.get('https://api.themoviedb.org/3/tv/popular',
@@ -190,7 +197,6 @@ const app = new Vue({
                 .then(response => {
                     this.filteredShowList = response.data.results;
                     this.printCast('tv', this.filteredShowList);
-                    // this.$forceUpdate();
                     this.filteredShowList = this.showsList;
                 });
             } else {
@@ -236,6 +242,7 @@ const app = new Vue({
             this.filteredShowList = [];
             this.movies = [];
             this.tvShows = [];
+            this.select = '';
         }
     }
 });
