@@ -147,7 +147,7 @@ main {
     left: 0;
     width: 100%;
     height: 100%;
-    padding: 40px 8px;
+    padding: 30px 8px;
     background-color: rgba(0, 0, 0, 0.8);
     opacity: 0;
     line-height: 17px;
@@ -168,7 +168,7 @@ main {
 .card p span:first-child {
     margin-right: 3px;
     font-weight: bold;
-    font-size: .9rem;
+    font-size: .95rem;
 }
 
 .language {
@@ -189,7 +189,3 @@ main {
     line-height: 15px;
 }
 /* main */
-
-
-
-
