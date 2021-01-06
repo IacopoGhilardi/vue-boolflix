@@ -10,7 +10,8 @@ const app = new Vue({
         tvShows: [],
         filteredShowList: [],
         mykey: '63d036c152cd4651d8a116600d977c32',
-        select: ''
+        select: '',
+        hover: false
     },
     mounted(){
         //richiamo le api per avere le opzioni della selection dei generi

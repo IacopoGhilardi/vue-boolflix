@@ -30,10 +30,10 @@
             <!-- navbar -->
             <nav class="nav-bar">
                 <ul>
-                    <li @click="reset" @click="toggleNav">Home</li>
-                    <li @click="getPopularMovies" @click="toggleNav">Film</li>
-                    <li @click="getPopularTvshow" @click="toggleNav">Serie Tv</li>
-                    <li @click="getPopularFromAllShows" @click="toggleNav">Most Popular</li>
+                    <li @click="reset">Home</li>
+                    <li @click="getPopularMovies">Film</li>
+                    <li @click="getPopularTvshow">Serie Tv</li>
+                    <li @click="getPopularFromAllShows">Most Popular</li>
                 </ul>
                 <!-- search -->
                 <div class="search-bar">
@@ -53,7 +53,7 @@
             <div class="card" v-for="movie in filteredShowList">
                 <!-- poster -->
                 <img v-if="movie.poster_path != null" :src="imgPath + movie.poster_path" alt="movie.title">
-                <img v-else src="img/image-not-found.png" alt="immagine non trovata">
+                <img v-else src="https://s3.amazonaws.com/speedsport-news/speedsport-news/wp-content/uploads/2018/07/01082232/image-not-found.png" alt="immagine non trovata">
                 <!-- overlay -->
                 <div class="card-overlay">
                     <p class="title"><span>Titolo:</span> {{movie.title}} {{movie.name}}</p>
