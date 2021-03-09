@@ -51,10 +51,19 @@ header {
     position: relative;
 }
 
-.nav-bar ul li:hover {
+.nav-bar ul li a:hover {
     cursor: pointer;
     color: white;
     transition: .3s;
+}
+
+.nav-bar ul li a {
+    color: rgb(180, 180, 180);
+    text-decoration: none;
+}
+
+.nav-bar ul li a:focus {
+    color: white;
 }
 
 .search-bar {

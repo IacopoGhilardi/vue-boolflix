@@ -15,7 +15,7 @@ const app = new Vue({
     },
     mounted(){
         //richiamo le api per avere le opzioni della selection dei generi
-        axios.all([
+        Promise.all([
             axios.get('https://api.themoviedb.org/3/genre/movie/list',
             {
                 params: {
@@ -33,10 +33,10 @@ const app = new Vue({
                 }
             })
         ])
-        .then(axios.spread((genreMovies, genreShows) => {
+        .then((response) => {
             //salvo i risultati nell'array dei generi
-            const movieGenreList = genreMovies.data.genres;
-            const showsGenreList = genreShows.data.genres;
+            const movieGenreList = response[0].data.genres;
+            const showsGenreList = response[1].data.genres;
             
             movieGenreList.forEach(element => {
                 showsGenreList.forEach((item, index) => {
@@ -46,7 +46,7 @@ const app = new Vue({
                 });
             });
             this.genreList = movieGenreList.concat(showsGenreList);
-        }));
+        });
     },
     methods: {
         //gestione della bandiera
@@ -127,7 +127,7 @@ const app = new Vue({
         searchMovie(){
             if (this.search != '') {
                 this.reset();
-                axios.all([
+                Promise.all([
                     //chiamata API movie
                     axios.get('https://api.themoviedb.org/3/search/movie',
                     {
@@ -147,10 +147,10 @@ const app = new Vue({
                         }
                     })
                 ])
-                .then(axios.spread((call1, call2) => {
+                .then((response) => {
                     //salvo i risultati nell'array movies
-                    this.movies = call1.data.results;
-                    this.tvShows = call2.data.results;
+                    this.movies = response[0].data.results;
+                    this.tvShows = response[1].data.results;
 
                     //cast di film e serie
                     this.printCast('movie', this.movies);                    
@@ -159,7 +159,7 @@ const app = new Vue({
                     this.filteredShowList = this.showsList;
 
                     this.search = '';
-                    }));
+                    });
             }
         },
         //stampo film popolari
@@ -207,7 +207,7 @@ const app = new Vue({
         //stampo tutti gli show popolari
         getPopularFromAllShows(){
             this.reset();
-                axios.all([
+                Promise.all([
                     //chiamata API movie
                     axios.get('https://api.themoviedb.org/3/movie/popular',
                     {
@@ -225,17 +225,17 @@ const app = new Vue({
                         }
                     })
                 ])
-                .then(axios.spread((call1, call2) => {
+                .then((response) => {
                     //salvo i risultati nell'array movies
-                    const popularMovies = call1.data.results;
-                    const popularTvShows = call2.data.results;
+                    const popularMovies = response[0].data.results;
+                    const popularTvShows = response[1].data.results;
 
                     //cast
                     this.printCast('movie', popularMovies);
                     this.printCast('tv', popularTvShows);
 
                     this.filteredShowList = this.showsList;
-                }));
+                });
         },
         //funzione reset
         reset() {
